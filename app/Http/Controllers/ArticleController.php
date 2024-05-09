@@ -10,7 +10,6 @@ use App\Interfaces\ArticleRepositoryInterface;
 use App\Models\Article;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 
 class ArticleController extends Controller
 {
