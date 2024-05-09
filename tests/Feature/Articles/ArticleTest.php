@@ -56,4 +56,35 @@ class ArticleTest extends TestCase
         $this->assertCount($count, $responseData['data']);
     }
 
+
+    /**
+     * Test creating a new article.
+     *
+     * @return void
+     */
+    public function test_create_article()
+    {
+        $articleData = [
+            'title' => 'Test Article',
+            'content' => 'This is a test article content.'
+        ];
+
+        $response = $this->postJson('/api/articles', $articleData, $this->headers);
+
+        $response->assertStatus(Response::HTTP_CREATED);
+
+        $response->assertJsonStructure([
+            'success',
+            'data' => [
+                'id',
+                'title',
+                'content',
+            ],
+        ]);
+
+        $response->assertJson([
+            'data' => $articleData
+        ]);
+    }
+
 }
