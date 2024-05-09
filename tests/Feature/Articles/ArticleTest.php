@@ -171,4 +171,37 @@ class ArticleTest extends TestCase
         $this->assertDatabaseHas('articles', ['id' => $article->id]);
     }
 
+
+    public function test_update_article()
+    {
+        $user = User::factory()->create();
+        $article = Article::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+
+        $updatedData = [
+            'title' => 'Updated Article Title',
+            'content' => 'Updated Article Content',
+        ];
+
+        $response = $this->putJson("/api/articles/{$article->id}", $updatedData, $this->headers);
+
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure(['success', 'data' => ['id', 'title', 'content']]);
+
+        $responseData = $response->json();
+
+        $this->assertTrue($responseData['success']);
+        $this->assertEquals('Article updated successfully', $responseData['message']);
+        $this->assertEquals($updatedData['title'], $responseData['data']['title']);
+        $this->assertEquals($updatedData['content'], $responseData['data']['content']);
+
+        $this->assertDatabaseHas('articles', [
+            'id' => $article->id,
+            'title' => $updatedData['title'],
+            'content' => $updatedData['content'],
+            'user_id' => $user->id,
+        ]);
+    }
+
 }

@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Classes\ApiResponseClass;
 use App\Http\Requests\StoreArticleRequest;
+use App\Http\Requests\UpdateArticleRequest;
 use App\Http\Resources\ArticleResource;
 use App\Interfaces\ArticleRepositoryInterface;
 use App\Models\Article;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ArticleController extends Controller
 {
@@ -48,6 +50,17 @@ class ArticleController extends Controller
         $article->delete();
 
         return ApiResponseClass::sendResponse(null, 'Article deleted successfully');
+    }
+
+    public function update(UpdateArticleRequest $request, Article $article)
+    {
+        if (Auth::user()->id !== $article->user_id) {
+            return ApiResponseClass::sendResponse('Unauthorized', 'You are not authorized to delete this article.', Response::HTTP_FORBIDDEN);
+        }
+
+        $article->update($request->validated());
+
+        return ApiResponseClass::sendResponse(new ArticleResource($article), 'Article updated successfully');
     }
 
 }

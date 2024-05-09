@@ -18,3 +18,4 @@ Route::get('articles', [ArticleController::class, 'index']);
 Route::post('articles', [ArticleController::class, 'store']);
 Route::get('articles/{article}', [ArticleController::class, 'show']);
 Route::delete('articles/{article}', [ArticleController::class, 'delete']);
+Route::put('articles/{article}', [ArticleController::class, 'update']);
