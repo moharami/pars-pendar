@@ -226,4 +226,39 @@ class ArticleCommentTest extends TestCase
         $this->assertEquals('Comment deleted successfully', $responseData['message']);
         $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
     }
+
+
+    /**
+     * Test toggling a like on a comment.
+     *
+     * @return void
+     */
+    public function testToggleLike()
+    {
+        $user = User::factory()->create();
+        $article = Article::factory()->create(['user_id' => $user->id]);
+
+        $comment = Comment::factory()->create([
+            'commentable_id' => $article->id,
+            'commentable_type' => Article::class,
+            'user_id' => $user->id,
+        ]);
+
+        $this->assertFalse($comment->likes()->where('user_id', $user->id)->exists());
+
+        $this->actingAs($user);
+        $response = $this->postJson("/api/comments/{$comment->id}/like", [], $this->headers);
+
+        $response->assertStatus(Response::HTTP_OK);
+
+        $this->assertTrue($comment->likes()->where('user_id', $user->id)->exists());
+
+        $response = $this->postJson("/api/comments/{$comment->id}/like", [], $this->headers);
+
+        $response->assertStatus(Response::HTTP_OK);
+
+        $this->assertFalse($comment->likes()->where('user_id', $user->id)->exists());
+    }
+
+
 }

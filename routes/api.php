@@ -26,3 +26,5 @@ Route::post('articles/{article}/comments', [ArticleCommentController::class, 'st
 Route::get('articles/{article}/comments/{comment}', [ArticleCommentController::class, 'show']);
 Route::put('articles/{article}/comments/{comment}', [ArticleCommentController::class, 'update']);
 Route::delete('articles/{article}/comments/{comment}', [ArticleCommentController::class, 'destroy']);
+
+Route::post('/comments/{comment}/like', [ArticleCommentController::class, 'toggleLike']);
