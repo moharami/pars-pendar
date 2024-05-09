@@ -130,4 +130,45 @@ class ArticleTest extends TestCase
         $this->assertEquals($user->email, $responseData['data']['user']['email']);
     }
 
+
+    public function test_delete_article()
+    {
+        $user = User::factory()->create();
+        $article = Article::factory()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user);
+
+        $response = $this->deleteJson("/api/articles/{$article->id}", [], $this->headers);
+
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure(['success', 'message']);
+
+        $responseData = $response->json();
+
+        $this->assertTrue($responseData['success']);
+        $this->assertEquals('Article deleted successfully', $responseData['message']);
+        $this->assertDatabaseMissing('articles', ['id' => $article->id]);
+    }
+
+
+    public function test_unauthorized_user_cannot_delete_article()
+    {
+        $user = User::factory()->create();
+        $article = Article::factory()->create(['user_id' => $user->id]);
+
+        $unauthorizedUser = User::factory()->create();
+        $this->actingAs($unauthorizedUser);
+
+        $response = $this->deleteJson("/api/articles/{$article->id}", [], $this->headers);
+
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+
+        $responseData = $response->json();
+
+        $this->assertEquals('You are not authorized to delete this article.', $responseData['message']);
+
+        $this->assertDatabaseHas('articles', ['id' => $article->id]);
+    }
+
 }
