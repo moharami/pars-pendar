@@ -96,4 +96,38 @@ class ArticleTest extends TestCase
 
     }
 
+
+    public function test_show_article()
+    {
+        $user = User::factory()->create();
+        $article = Article::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->get("/api/articles/{$article->id}", $this->headers);
+
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure([
+            'success',
+            'data' => [
+                'id',
+                'title',
+                'content',
+                'user' => [
+                    'id',
+                    'name',
+                    'email',
+                ],
+            ],
+        ]);
+
+        $responseData = $response->json();
+
+        $this->assertTrue($responseData['success']);
+        $this->assertEquals($article->id, $responseData['data']['id']);
+        $this->assertEquals($article->title, $responseData['data']['title']);
+        $this->assertEquals($article->content, $responseData['data']['content']);
+        $this->assertEquals($user->id, $responseData['data']['user']['id']);
+        $this->assertEquals($user->name, $responseData['data']['user']['name']);
+        $this->assertEquals($user->email, $responseData['data']['user']['email']);
+    }
+
 }

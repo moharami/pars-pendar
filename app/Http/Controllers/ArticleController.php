@@ -6,6 +6,7 @@ use App\Classes\ApiResponseClass;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Resources\ArticleResource;
 use App\Interfaces\ArticleRepositoryInterface;
+use App\Models\Article;
 use Illuminate\Http\Response;
 
 class ArticleController extends Controller
@@ -30,6 +31,11 @@ class ArticleController extends Controller
         $validatedData['user_id'] = auth()->id();
         $article = $this->articleRepository->store($validatedData);
         return ApiResponseClass::sendResponse(new ArticleResource($article), 'Article created successfully', Response::HTTP_CREATED);
+    }
+
+    public function show(Article $article)
+    {
+        return ApiResponseClass::sendResponse(new ArticleResource($article));
     }
 
 }
