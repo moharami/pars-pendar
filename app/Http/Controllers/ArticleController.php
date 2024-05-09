@@ -27,6 +27,7 @@ class ArticleController extends Controller
     public function store(StoreArticleRequest $request)
     {
         $validatedData = $request->validated();
+        $validatedData['user_id'] = auth()->id();
         $article = $this->articleRepository->store($validatedData);
         return ApiResponseClass::sendResponse(new ArticleResource($article), 'Article created successfully', Response::HTTP_CREATED);
     }

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\article;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,6 +21,16 @@ class ArticleFactory extends Factory
         return [
             'title' => $this->faker->sentence,
             'content' => $this->faker->paragraph,
+            'user_id' => User::factory(),
         ];
+    }
+
+    public function forUserId(int $userId): Factory
+    {
+        return $this->state(function (array $attributes) use ($userId) {
+            return [
+                'user_id' => $userId,
+            ];
+        });
     }
 }
