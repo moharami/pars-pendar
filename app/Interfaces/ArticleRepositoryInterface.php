@@ -4,7 +4,7 @@ namespace App\Interfaces;
 
 interface ArticleRepositoryInterface
 {
-    public function index();
+    public function index($data);
     public function getById($id);
     public function store(array $data);
     public function update(array $data,$id);

@@ -12,10 +12,9 @@ class ArticleRepository implements ArticleRepositoryInterface
     /**
      * @return Collection
      */
-    public function index()
+    public function index($data)
     {
-        return Article::query()->orderBy('created_at', 'DESC')
-            ->paginate(3);
+        return Article::filter($data)->get();
     }
 
     /**

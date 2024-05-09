@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\ApiResponseClass;
+use App\Http\Requests\ArticleIndexRequest;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use App\Http\Resources\ArticleResource;
@@ -20,9 +21,9 @@ class ArticleController extends Controller
         $this->articleRepository = $articleRepository;
     }
 
-    public function index()
+    public function index(ArticleIndexRequest $request)
     {
-        $data = $this->articleRepository->index();
+        $data = $this->articleRepository->index($request);
         return ApiResponseClass::sendResponse(ArticleResource::collection($data));
     }
 

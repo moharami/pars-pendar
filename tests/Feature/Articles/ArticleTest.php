@@ -204,4 +204,24 @@ class ArticleTest extends TestCase
         ]);
     }
 
+
+    public function test_filters_articles_by_title_and_paginates_results()
+    {
+       Article::factory()->create(['title' => 'Test Article amir']);
+       Article::factory()->create(['title' => 'Test Article ali']);
+       Article::factory()->create(['title' => 'Test Article ali2']);
+
+        $response = $this->get("/api/articles/". '?title=ali');
+
+        $response->assertStatus(Response::HTTP_OK);
+
+        $this->assertCount(2, $response->json('data'));
+
+        $response = $this->get("/api/articles/". '?title=amir');
+        $this->assertCount(1, $response->json('data'));
+
+        $response = $this->get("/api/articles/". '?title=test');
+        $this->assertCount(3, $response->json('data'));
+    }
+
 }
