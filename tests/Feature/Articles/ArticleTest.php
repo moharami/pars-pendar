@@ -2,11 +2,14 @@
 
 namespace Tests\Feature\Articles;
 
+use App\Http\Requests\ArticleIndexRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Article;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class ArticleTest extends TestCase
@@ -230,6 +233,23 @@ class ArticleTest extends TestCase
         $responseJson = $response->json();
         $this->assertCount(3, $responseJson['data']['item']);
     }
+
+
+    public function test_filters_articles_by_title_results_with_cache_decorator()
+    {
+        Article::factory()->create(['title' => 'Test Article amir']);
+        $data = ['title'=>'amir', 'page'=>"1"];
+        $response = $this->get("/api/articles/?". http_build_query($data));
+        $response->assertStatus(Response::HTTP_OK);
+        $cacheKey = 'ar_'. md5(json_encode($data));
+        $this->assertCount(1, $response->json('data.item'));
+        if (Config('article.cache_article')){
+            $this->assertTrue(Config('article.cache_article') && Cache::has($cacheKey));
+        }else{
+            $this->assertFalse(Config('article.cache_article') && Cache::has($cacheKey));
+        }
+    }
+
 
 
 }
