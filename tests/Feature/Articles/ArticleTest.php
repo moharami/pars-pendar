@@ -4,12 +4,15 @@ namespace Tests\Feature\Articles;
 
 use App\Http\Requests\ArticleIndexRequest;
 use App\Http\Resources\UserResource;
+use App\Jobs\SendEmailToAdminJob;
+use App\Jobs\SendSMSToAdminJob;
 use App\Models\Article;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class ArticleTest extends TestCase
@@ -248,6 +251,25 @@ class ArticleTest extends TestCase
         }else{
             $this->assertFalse(Config('article.cache_article') && Cache::has($cacheKey));
         }
+    }
+
+
+    public function test_create_article_job()
+    {
+        Queue::fake();
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $articleData = [
+            'title' => 'Test Article',
+            'content' => 'This is a test article content.',
+        ];
+
+        $this->postJson('/api/articles', $articleData, $this->headers);
+
+        Queue::assertPushedOn('default', SendEmailToAdminJob::class);
+        Queue::assertPushedOn('default', SendSMSToAdminJob::class);
     }
 
 
