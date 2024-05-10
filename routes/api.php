@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\ArticleCommentController;
+use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\ArticleCommentController;
 use Illuminate\Support\Facades\Route;
 
 
