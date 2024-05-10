@@ -25,10 +25,10 @@ class FilterQuery
                 continue;
             }
             $class = $this->filterNamespace . Str::studly($item) . 'Filter';
+            if (class_exists($class)){
+                $this->query = (new $class($this->query, $value))->apply();
+            }
 
-            throw_if(!class_exists($class), FailedToFindFilter::class, $item);
-
-            $this->query = (new $class($this->query, $value))->apply();
         }
 
         return $this->query;

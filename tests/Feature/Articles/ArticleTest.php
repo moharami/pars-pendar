@@ -34,36 +34,41 @@ class ArticleTest extends TestCase
      */
     public function test_index_articles()
     {
-        $count  = 3;
+        $count = 3;
         $user = User::factory()->create();
         $this->actingAs($user);
 
         Article::factory()->count($count)->forUserId($user->id)->create();
 
         $response = $this->get('/api/articles', $this->headers);
-
+        $responseJson = $response->json();
 
         $response->assertStatus(Response::HTTP_OK);
 
         $response->assertJsonStructure([
             'success',
             'data' => [
-                '*' => [
-                    'id',
-                    'title',
-                    'content',
-                    'user' => [
-                        'id',
-                        'name',
-                        'email',
+
+                'item' =>
+                    [
+                        '*' => [
+                            'id',
+                            'title',
+                            'content',
+                            'user' => [
+                                'id',
+                                'name',
+                                'email',
+                            ],
+                        ],
                     ],
-                ],
+
             ],
         ]);
 
         $responseData = $response->json();
 
-        $this->assertCount($count, $responseData['data']);
+        $this->assertCount($count, $responseJson['data']['item']);
     }
 
 
@@ -205,23 +210,26 @@ class ArticleTest extends TestCase
     }
 
 
-    public function test_filters_articles_by_title_and_paginates_results()
+    public function test_filters_articles_by_title_results()
     {
-       Article::factory()->create(['title' => 'Test Article amir']);
-       Article::factory()->create(['title' => 'Test Article ali']);
-       Article::factory()->create(['title' => 'Test Article ali2']);
+        Article::factory()->create(['title' => 'Test Article amir']);
+        Article::factory()->create(['title' => 'Test Article ali']);
+        Article::factory()->create(['title' => 'Test Article ali2']);
 
-        $response = $this->get("/api/articles/". '?title=ali');
+        $response = $this->get("/api/articles/" . '?title=ali&page=1');
 
         $response->assertStatus(Response::HTTP_OK);
-
         $this->assertCount(2, $response->json('data'));
 
-        $response = $this->get("/api/articles/". '?title=amir');
-        $this->assertCount(1, $response->json('data'));
+        $response = $this->get("/api/articles/" . '?title=amir');
+        $responseJson = $response->json();
 
-        $response = $this->get("/api/articles/". '?title=test');
-        $this->assertCount(3, $response->json('data'));
+        $this->assertCount(1, $responseJson['data']['item']);
+
+        $response = $this->get("/api/articles/" . '?title=Test');
+        $responseJson = $response->json();
+        $this->assertCount(3, $responseJson['data']['item']);
     }
+
 
 }

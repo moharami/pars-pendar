@@ -24,6 +24,7 @@ class ArticleIndexRequest extends FormRequest
         return [
             'title' => 'nullable|string|max:255',
             'content' => 'nullable|string|max:255',
+            'page' => 'nullable|int',
         ];
     }
 }

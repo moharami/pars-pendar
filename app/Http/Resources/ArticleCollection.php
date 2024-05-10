@@ -14,6 +14,16 @@ class ArticleCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'item' => $this->collection,
+            'meta' => [
+                'pagination' => [
+                    'total' => $this->total(),
+                    'per_page' => $this->perPage(),
+                    'current_page' => $this->currentPage(),
+                ],
+            ],
+        ];
     }
+
 }

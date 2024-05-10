@@ -6,6 +6,7 @@ use App\Classes\ApiResponseClass;
 use App\Http\Requests\ArticleIndexRequest;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
+use App\Http\Resources\ArticleCollection;
 use App\Http\Resources\ArticleResource;
 use App\Interfaces\ArticleRepositoryInterface;
 use App\Models\Article;
@@ -23,8 +24,9 @@ class ArticleController extends Controller
 
     public function index(ArticleIndexRequest $request)
     {
+
         $data = $this->articleRepository->index($request);
-        return ApiResponseClass::sendResponse(ArticleResource::collection($data));
+        return ApiResponseClass::sendResponse(new ArticleCollection($data));
     }
 
 

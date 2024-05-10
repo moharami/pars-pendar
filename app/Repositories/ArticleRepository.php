@@ -14,7 +14,9 @@ class ArticleRepository implements ArticleRepositoryInterface
      */
     public function index($data)
     {
-        return Article::filter($data)->get();
+        $page = $data->page ?? config('per_page' , 10);
+
+        return Article::filter($data)->paginate($page);
     }
 
     /**
