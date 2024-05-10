@@ -13,18 +13,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::get('articles', [ArticleController::class, 'index']);
-Route::post('articles', [ArticleController::class, 'store']);
-Route::get('articles/{article}', [ArticleController::class, 'show']);
-Route::delete('articles/{article}', [ArticleController::class, 'delete']);
-Route::put('articles/{article}', [ArticleController::class, 'update']);
+// Article routes
+Route::resource('articles', ArticleController::class);
 
+// Comment rotes
+Route::resource('articles.comments', ArticleCommentController::class);
 
-// Comment routes
-Route::get('articles/{article}/comments', [ArticleCommentController::class, 'index']);
-Route::post('articles/{article}/comments', [ArticleCommentController::class, 'store']);
-Route::get('articles/{article}/comments/{comment}', [ArticleCommentController::class, 'show']);
-Route::put('articles/{article}/comments/{comment}', [ArticleCommentController::class, 'update']);
-Route::delete('articles/{article}/comments/{comment}', [ArticleCommentController::class, 'destroy']);
 
 Route::post('/comments/{comment}/like', [ArticleCommentController::class, 'toggleLike']);
