@@ -23,6 +23,10 @@ class ArticleController extends Controller
         $this->articleRepository = $articleRepository;
     }
 
+    /**
+     * @param ArticleIndexRequest $request
+     * @return JsonResponse
+     */
     public function index(ArticleIndexRequest $request): JsonResponse
     {
 
@@ -31,6 +35,10 @@ class ArticleController extends Controller
     }
 
 
+    /**
+     * @param StoreArticleRequest $request
+     * @return JsonResponse
+     */
     public function store(StoreArticleRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
@@ -39,11 +47,19 @@ class ArticleController extends Controller
         return ApiResponseClass::sendResponse(new ArticleResource($article), 'Article created successfully', Response::HTTP_CREATED);
     }
 
+    /**
+     * @param Article $article
+     * @return JsonResponse
+     */
     public function show(Article $article): JsonResponse
     {
         return ApiResponseClass::sendResponse(new ArticleResource($article));
     }
 
+    /**
+     * @param Article $article
+     * @return JsonResponse
+     */
     public function destroy(Article $article): JsonResponse
     {
         if (Auth::user()->id !== $article->user_id) {
@@ -55,6 +71,11 @@ class ArticleController extends Controller
         return ApiResponseClass::sendResponse(null, 'Article deleted successfully');
     }
 
+    /**
+     * @param UpdateArticleRequest $request
+     * @param Article $article
+     * @return JsonResponse
+     */
     public function update(UpdateArticleRequest $request, Article $article): JsonResponse
     {
         if (Auth::user()->id !== $article->user_id) {

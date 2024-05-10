@@ -14,13 +14,22 @@ use Illuminate\Http\Response;
 
 class ArticleCommentController extends Controller
 {
+    /**
+     * @param Article $article
+     * @return JsonResponse
+     */
     public function index(Article $article): JsonResponse
     {
         $comments = $article->comments;
         return ApiResponseClass::sendResponse(CommentResource::collection($comments));
     }
 
-    public function store(StoreCommentRequest $request, Article $article)
+    /**
+     * @param StoreCommentRequest $request
+     * @param Article $article
+     * @return JsonResponse
+     */
+    public function store(StoreCommentRequest $request, Article $article): JsonResponse
     {
         $validatedData = $request->validated();
 
@@ -33,18 +42,33 @@ class ArticleCommentController extends Controller
     }
 
 
-
+    /**
+     * @param Article $article
+     * @param Comment $comment
+     * @return JsonResponse
+     */
     public function show(Article $article, Comment $comment): JsonResponse
     {
         return ApiResponseClass::sendResponse(new CommentResource($comment));
     }
 
+    /**
+     * @param UpdateCommentRequest $request
+     * @param Article $article
+     * @param Comment $comment
+     * @return JsonResponse
+     */
     public function update(UpdateCommentRequest $request, Article $article, Comment $comment): JsonResponse
     {
         $comment->update($request->validated());
         return ApiResponseClass::sendResponse(new CommentResource($comment), 'Comment updated successfully');
     }
 
+    /**
+     * @param Article $article
+     * @param Comment $comment
+     * @return JsonResponse
+     */
     public function destroy(Article $article, Comment $comment): JsonResponse
     {
         $comment->delete();
@@ -52,6 +76,11 @@ class ArticleCommentController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @param Comment $comment
+     * @return JsonResponse
+     */
     public function toggleLike(Request $request, Comment $comment): JsonResponse
     {
         $user = $request->user();
