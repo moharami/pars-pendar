@@ -340,7 +340,8 @@
           },
           {
             "in": "path",
-            "name": "commentId",
+            "name": "comment,,
+            Id",
             "required": true,
             "schema": {
               "type": "integer"
@@ -487,9 +488,12 @@
           },
           "author": {
             "type": "string"
+          },
+          "image_path": {
+            "type": "string"
           }
         },
-        "required": ["id", "title", "body", "author"]
+        "required": ["id", "title", "body", "author", "image_path"]
       },
       "StoreArticleRequest": {
         "type": "object",
@@ -502,9 +506,13 @@
           },
           "author": {
             "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "format": "binary"
           }
         },
-        "required": ["title", "body", "author"]
+        "required": ["title", "body", "author", "image"]
       },
       "UpdateArticleRequest": {
         "type": "object",
@@ -517,6 +525,10 @@
           },
           "author": {
             "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "format": "binary"
           }
         },
         "required": ["title", "body", "author"]
