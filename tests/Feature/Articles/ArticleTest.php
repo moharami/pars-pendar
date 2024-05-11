@@ -10,9 +10,11 @@ use App\Models\Article;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ArticleTest extends TestCase
@@ -105,6 +107,41 @@ class ArticleTest extends TestCase
             'user_id' => $user->id,
         ]);
 
+    }
+
+    /**
+     * Test creating a new article with an image.
+     *
+     * @return void
+     */
+    public function test_create_article_with_image()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $articleData = [
+            'title' => 'Test Article',
+            'content' => 'This is a test article content.',
+            'image' => UploadedFile::fake()->image('test_image.jpg'),
+        ];
+
+        Storage::fake('public');
+
+        $response = $this->postJson('/api/articles', $articleData, $this->headers);
+        $responseData = $response->json();
+
+        $this->assertTrue($responseData['success']);
+        $this->assertEquals('Article created successfully', $responseData['message']);
+
+        $article = Article::latest()->first();
+        $this->assertNotNull($article->image_path);
+        Storage::disk('public')->assertExists($article->image_path);
+
+        $this->assertDatabaseHas('articles', [
+            'title' => $articleData['title'],
+            'content' => $articleData['content'],
+            'user_id' => $user->id,
+        ]);
     }
 
 

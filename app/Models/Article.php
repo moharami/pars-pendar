@@ -12,7 +12,9 @@ class Article extends Model
 {
     use HasFactory,Filterable;
 
-    protected $fillable = ['title', 'content', 'user_id'];
+
+    protected $fillable = ['title', 'content', 'user_id', 'image_path'];
+
 
 
     /**

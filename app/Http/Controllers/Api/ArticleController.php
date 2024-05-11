@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateArticleRequest;
 use App\Http\Resources\ArticleCollection;
 use App\Http\Resources\ArticleResource;
 use App\Interfaces\ArticleRepositoryInterface;
+use App\Interfaces\FileRepositoryInterface;
 use App\Models\Article;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -18,10 +19,12 @@ use Illuminate\Support\Facades\Auth;
 class ArticleController extends Controller
 {
     private ArticleRepositoryInterface $articleRepository;
+    private FileRepositoryInterface $fileRepository;
 
-    public function __construct(ArticleRepositoryInterface $articleRepository)
+    public function __construct(ArticleRepositoryInterface $articleRepository, FileRepositoryInterface $fileRepository)
     {
         $this->articleRepository = $articleRepository;
+        $this->fileRepository = $fileRepository;
     }
 
     /**
@@ -44,6 +47,10 @@ class ArticleController extends Controller
     {
         $validatedData = $request->validated();
         $validatedData['user_id'] = auth()->id();
+        if ($request->hasFile('image')) {
+            $validatedData['image_path'] =$this->fileRepository->store($request->file('image'), 'article_images');
+        }
+
         $article = $this->articleRepository->store($validatedData);
         return ApiResponseClass::sendResponse(new ArticleResource($article), 'Article created successfully', Response::HTTP_CREATED);
     }
@@ -80,10 +87,24 @@ class ArticleController extends Controller
     public function update(UpdateArticleRequest $request, Article $article): JsonResponse
     {
         if (Auth::user()->id !== $article->user_id) {
-            return ApiResponseClass::sendResponse('Unauthorized', 'You are not authorized to delete this article.', Response::HTTP_FORBIDDEN);
+            return ApiResponseClass::sendResponse('Unauthorized', 'You are not authorized to update this article.', Response::HTTP_FORBIDDEN);
         }
 
-        $article->update($request->validated());
+        $validatedData = $request->validated();
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $this->fileRepository->store($image, 'article_images');
+            $validatedData['image_path'] = $imagePath;
+
+            // Delete the old image if it exists
+            if ($article->image_path) {
+                $this->fileRepository->delete($article->image_path);
+            }
+        }
+
+        $article->update($validatedData);
 
         return ApiResponseClass::sendResponse(new ArticleResource($article), 'Article updated successfully');
     }
