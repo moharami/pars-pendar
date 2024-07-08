@@ -6466,16 +6466,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.67",
+            "version": "1.11.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "16ddbe776f10da6a95ebd25de7c1dbed397dc493"
+                "reference": "52d2bbfdcae7f895915629e4694e9497d0f8e28d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/16ddbe776f10da6a95ebd25de7c1dbed397dc493",
-                "reference": "16ddbe776f10da6a95ebd25de7c1dbed397dc493",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/52d2bbfdcae7f895915629e4694e9497d0f8e28d",
+                "reference": "52d2bbfdcae7f895915629e4694e9497d0f8e28d",
                 "shasum": ""
             },
             "require": {
@@ -6520,7 +6520,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-16T07:22:02+00:00"
+            "time": "2024-07-06T11:17:41+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -6947,21 +6947,21 @@
         },
         {
             "name": "rector/rector",
-            "version": "1.0.4",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "6e04d0eb087aef707fa0c5686d33d6ff61f4a555"
+                "reference": "2fa387553db22b6f9bcccf5ff16f2c2c18a52a65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/6e04d0eb087aef707fa0c5686d33d6ff61f4a555",
-                "reference": "6e04d0eb087aef707fa0c5686d33d6ff61f4a555",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/2fa387553db22b6f9bcccf5ff16f2c2c18a52a65",
+                "reference": "2fa387553db22b6f9bcccf5ff16f2c2c18a52a65",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2|^8.0",
-                "phpstan/phpstan": "^1.10.57"
+                "phpstan/phpstan": "^1.11"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -6994,7 +6994,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/1.0.4"
+                "source": "https://github.com/rectorphp/rector/tree/1.2.0"
             },
             "funding": [
                 {
@@ -7002,7 +7002,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-05T09:01:07+00:00"
+            "time": "2024-07-01T14:24:45+00:00"
         },
         {
             "name": "sebastian/cli-parser",
